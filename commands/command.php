@@ -52,9 +52,9 @@ class Command
     $sResult = '';
     if(trim($sVar)!="" && !empty($sVar))
     {
-          $iHours   = floor($sVar);
-          $iMinutes = round(60*($sVar-$iHours));
-          $sResult  = str_pad($iHours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($iMinutes, 2, "0", STR_PAD_LEFT);
+      $iHours   = floor($sVar);
+      $iMinutes = round(60*($sVar-$iHours));
+      $sResult  = str_pad($iHours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($iMinutes, 2, "0", STR_PAD_LEFT);
     }
     return $sResult;
   }
