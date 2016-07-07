@@ -2,7 +2,6 @@
 
 class Command
 {
-  public $fResult = '';
   public $iTimeIn;
   public $iTimeOut;
   public $sHoursType = '';
@@ -10,22 +9,23 @@ class Command
   // Compute Total Hours from Time In to Time Out
   public function getComputeTotalHours($iTimeIn, $iTimeOut,$sHoursType = null)
   {
+    $fResult = '';
     $this->iTimeIn    = $iTimeIn;
     $this->iTimeOut   = $iTimeOut;
     $this->sHoursType = $sHoursType;
 
-    if($this->iTimeIn!="" && $this->iTimeOut!="")
+    if(($this->iTimeIn!="" && $this->iTimeOut!="") && (!empty($this->iTimeIn) && !empty($this->iTimeOut)))
     {
         // Time Format
         if($this->sHoursType == "time")
         {
             // Convert to Time Format
-            return $this->getDecimalToTimeFormat((strtotime($this->iTimeOut) - strtotime($this->iTimeIn))/60/60);
+            $fResult = $this->getDecimalToTimeFormat((strtotime($this->iTimeOut) - strtotime($this->iTimeIn))/60/60);
         }
         else
         {
             // Convert to Decimal Format
-            return (strtotime($this->iTimeOut) - strtotime($this->iTimeIn))/60/60;
+            $fResult = (strtotime($this->iTimeOut) - strtotime($this->iTimeIn))/60/60;
         }
 
     }
@@ -36,11 +36,12 @@ class Command
   // 00:00:00 to 0.0
   public function getTimeToDecimalFormat($sVar)
   {
+    $fResult = '';
     if(trim($sVar)!="" && !empty($sVar))
     {
       $aTime    = explode(':', $sVar);
       $fResult  = ($aTime[0]*60) + ($aTime[1]) + ((count($aTime)==3) ? ($aTime[2]/60) : 0);
-      return $fResult/60;
+      $fResult  = $fResult/60;
     }
     return $fResult;
   }
@@ -48,13 +49,14 @@ class Command
   // 0.0 to 00:00:00
   public function getDecimalToTimeFormat($sVar)
   {
+    $sResult = '';
     if(trim($sVar)!="" && !empty($sVar))
     {
           $iHours   = floor($sVar);
           $iMinutes = round(60*($sVar-$iHours));
-          return str_pad($iHours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($iMinutes, 2, "0", STR_PAD_LEFT);
+          $sResult  = str_pad($iHours, 2, "0", STR_PAD_LEFT) . ":" . str_pad($iMinutes, 2, "0", STR_PAD_LEFT);
     }
-    return $fResult;
+    return $sResult;
   }
 
 }
