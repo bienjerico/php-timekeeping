@@ -59,6 +59,32 @@ class Command
     return $sResult;
   }
 
+  // Get the Time from Date and Time
+  // 2014-10-13 12:00 to 12:00
+  public function getTime($sVar)
+  {
+    $sResult = '';
+    if(trim($sVar)!="" && !empty($sVar))
+    {
+      $sResult = date('H:i',strtotime($sVar));
+    }
+    return $sResult;
+  }
+
+  // Get the Date from Date and Time
+  // 2014-10-13 12:00 to 2014-10-13
+  public function getDate($sVar)
+  {
+    $sResult = '';
+    if(trim($sVar)!="" && !empty($sVar))
+    {
+      $sResult = date('Y-m-d',strtotime($sVar));
+    }
+    return $sResult;
+  }
+
+
+
 }
 
 ?>

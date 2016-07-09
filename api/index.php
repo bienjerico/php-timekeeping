@@ -1,60 +1,93 @@
 <?php
 
 require_once('../commands/command.php');
+require_once('../commands/schedule.php');
 
-$compute = new Command;
-
-$sTimeIn = "2015-12-24 12:00:00";
-$sTimeOut = "2015-12-24 14:05:01";
-$fDecimalHours = 5.01;
-$sTimeHours = "5:40";
+$command = new Command;
+$schedule = new Schedule;
 
 
-echo $compute->getComputeTotalHours($sTimeIn,$sTimeOut);
-echo "<br/>";
-echo $compute->getDecimalToTimeFormat($fDecimalHours);
-echo "<br/>";
-echo $compute->getTimeToDecimalFormat($sTimeHours);
-echo "<br/>";
+
+# Step 1 - Fill-up variables
+
+$sMethod = 'shift'; // shift / calendar mothed
 
 $sBioTimeIn = '2016-06-14 08:20';
 $sBioTimeOut = '2016-06-14 18:40';
 
-echo $sDate = date('Y-m-d',strtotime($sBioTimeIn));
-echo "<br/>";
-echo $sDateNext = date('Y-m-d',strtotime($sDate.' +1 day'));
+$sDateBio = date('Y-m-d',strtotime($sBioTimeIn));
+$sDateBioNext = date('Y-m-d',strtotime($sDateBio.' +1 day'));
 
 $sBreakHours = '01:00';
-
 $sGracePeriodHours = '00:10';
 
-$sNDTimeIn = $sDate.' '.'22:00';
-$sNDTimeIn = $sDateNext.' '.'06:00';
+$sNDTimeIn = $sDateBio.' '.'22:00';
+$sNDTimeOut = $sDateBioNext.' '.'06:00';
 
 $sLeaveHours = '04:00';
 $sLeaveType  = 'VL';
-$sLeaveDay   = 'second';// first / second / whole day
+$sLeaveDay   = 'second';// first or second or whole day
 
+$sObToilType  = 'OB';// OB or Toil
 $sObToilTimeIn  = '2016-06-14 08:00';
 $sObToilTimeOut = '2016-06-14 08:20';
 
+$sSchedType   = 'fixed'; // flexi or fixed
+$sSchedHours  = '09:00'; // for flexi only
 $sSchedTimeIn = '08:00';
 $sSchedTimeOut = '17:00';
-echo "<br/>";
-if($compute->getTimeToDecimalFormat($sSchedTimeIn)>$compute->getTimeToDecimalFormat($sSchedTimeOut))
-{
-  $sSchedTimeIn = $sDate.' '.$sSchedTimeIn;
-  $sSchedTimeOut = $sDateNext.' '.$sSchedTimeOut;
-}
-else {
-  $sSchedTimeIn = $sDate.' '.$sSchedTimeIn;
-  $sSchedTimeOut = $sDate.' '.$sSchedTimeOut;
-}
-echo $sSchedTimeIn;echo "<br/>";
-echo $sSchedTimeOut;
+
+$sRestDate = '2016-06-15';
+$sHolidayDate = '2016-06-16';
+$sSuspensionTimeIn = '2016-06-17 13:00';
+$sSuspensionTimeOut = '2016-06-18 00:00';
 
 $sOvertimeTimeIn = '17:00';
 $sOvertimeTimeOut = '18:40';
+
+# Step 2 - Transfer to Data array
+
+$aData = array(
+'sMethod' => $sMethod,
+'sBioTimeIn' => $sBioTimeIn,
+'sBioTimeOut' => $sBioTimeOut,
+
+'sDateBio' => $sDateBio,
+'sDateBioNext' => $sDateBioNext,
+
+'sBreakHours' => $sBreakHours,
+'sGracePeriodHours' => $sGracePeriodHours,
+
+'sNDTimeIn' => $sNDTimeIn,
+'sNDTimeOut' => $sNDTimeOut,
+
+'sLeaveHours' => $sLeaveHours,
+'sLeaveType' => $sLeaveType,
+'sLeaveDay' => $sLeaveDay,
+
+'sObToilTimeIn' => $sObToilTimeIn,
+'sObToilTimeOut' => $sObToilTimeOut,
+
+'sSchedType' => $sSchedType,
+'sSchedHours' => $sSchedHours,
+
+'sSchedTimeIn' => $sSchedTimeIn,
+'sSchedTimeOut' => $sSchedTimeOut,
+
+'sRestDate' => $sRestDate,
+'sHolidayDate' => $sHolidayDate,
+
+'sSuspensionTimeIn' => $sSuspensionTimeIn,
+'sSuspensionTimeOut' => $sSuspensionTimeOut,
+
+'sOvertimeTimeIn' => $sOvertimeTimeIn,
+'sOvertimeTimeOut' => $sOvertimeTimeOut
+);
+
+# Step 3 - Generate Schedule
+$aSchedule = $schedule->getSchedule($aData);
+$sSchedTimeIn = $aSchedule[0];
+$sSchedTimeOut = $aSchedule[1];
 
 
 //LATE HOURS
@@ -62,6 +95,24 @@ $sOvertimeTimeOut = '18:40';
 //TOTAL WORKING HOURS
 //EXCESS HOURS
 
+$sTotalLate = '';
+$sTotalUndertime = '';
+$sTotalExcessHours = '';
+$sTotalWorkingHours = '';
+
+if($sSchedType == 'fixed')
+{
+
+
+
+  if(strtotime($sBioTimeIn)>strtotime($sSchedTimeIn))
+  {
+    if()
+    $sTotalLate = $command->getComputeTotalHours($sSchedTimeIn,$sBioTimeIn);
+  }
+
+
+}
 
 
 ?>
